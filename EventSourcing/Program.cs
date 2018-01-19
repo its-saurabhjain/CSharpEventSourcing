@@ -18,9 +18,22 @@ namespace EventSourcing
             Products p = new Products(eb);
             eb.Command(new ChangePriceCommand(p, "120"));
 
-            string productPrice = eb.Query<string>(new PriceQuery() { Target = p });
+
+            foreach (var e in eb.AllEvents) {
+                Console.WriteLine(e.ToString());
+            }
+            string productPrice;
+            productPrice = eb.Query<string>(new PriceQuery() { Target = p });
             Console.WriteLine(productPrice);
 
+            eb.UndoLast();
+            foreach (var e in eb.AllEvents)
+            {
+                Console.WriteLine(e.ToString());
+            }
+
+            productPrice = eb.Query<string>(new PriceQuery() { Target = p });
+            Console.WriteLine(productPrice);
             Console.ReadLine();
             
         }
@@ -31,7 +44,7 @@ namespace EventSourcing
     public class Products {
 
         EventBroker _eventBroker;
-        private string productPrice;
+        private string productPrice = "0";
         public Products(EventBroker eventBroker) {
 
             this._eventBroker = eventBroker;
@@ -53,6 +66,9 @@ namespace EventSourcing
             var cac = e as ChangePriceCommand;
             if (cac != null && cac._target == this) {
 
+                //Log the events
+               if(cac.Register == true) _eventBroker.AllEvents.Add(new PriceChangeEvent(this, this.productPrice, cac._price));
+
                 productPrice = cac._price;
             }
         }
@@ -60,7 +76,7 @@ namespace EventSourcing
 
     public class EventBroker {
 
-        IList<DomainEvent> AllEvents = new List<DomainEvent>();
+        public IList<DomainEvent> AllEvents = new List<DomainEvent>();
         //Command Events
         public event EventHandler<Command> commands;
         public event EventHandler<Query> querys;
@@ -71,6 +87,17 @@ namespace EventSourcing
         {
             querys?.Invoke(this, q);
             return (T) q.Result;
+        }
+        public void UndoLast() {
+
+            var e = AllEvents.LastOrDefault();
+            var pc = e as PriceChangeEvent;
+            if (pc != null) {
+
+                Command(new ChangePriceCommand(pc.Target, pc.oldPrice) { Register = false});
+                AllEvents.Remove(e);
+            }
+
         }
     }
 
@@ -87,6 +114,7 @@ namespace EventSourcing
 
     public class Command: EventArgs
     {
+        public bool Register = true;
     }
     public class ChangePriceCommand : Command {
 
@@ -96,9 +124,26 @@ namespace EventSourcing
             _target = target;
             _price = price;
         }
+        
     }
 
-    internal class DomainEvent
+    public class DomainEvent
     {
+    }
+    public class PriceChangeEvent : DomainEvent {
+
+        public Products Target;
+        public string oldPrice, newPrice;
+
+        public PriceChangeEvent(Products target, string oldPrice, string newPrice)
+        {
+            Target = target;
+            this.oldPrice = oldPrice;
+            this.newPrice = newPrice;
+        }
+        public override string ToString()
+        {
+            return $"Price Changed from {oldPrice} to {newPrice}";
+        }
     }
 }

@@ -4,3 +4,10 @@ C:\Users\30197821\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\EventSourcing.p
 C:\Users\30197821\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\EventSourcing.csproj.CoreCompileInputs.cache
 C:\Users\30197821\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\EventSourcing.exe
 C:\Users\30197821\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\EventSourcing.pdb
+C:\Tutorials\EventSourcing\EventSourcing\bin\Debug\EventSourcing.exe.config
+C:\Tutorials\EventSourcing\EventSourcing\bin\Debug\EventSourcing.exe
+C:\Tutorials\EventSourcing\EventSourcing\bin\Debug\EventSourcing.pdb
+C:\Tutorials\EventSourcing\EventSourcing\obj\Debug\EventSourcing.csprojResolveAssemblyReference.cache
+C:\Tutorials\EventSourcing\EventSourcing\obj\Debug\EventSourcing.csproj.CoreCompileInputs.cache
+C:\Tutorials\EventSourcing\EventSourcing\obj\Debug\EventSourcing.exe
+C:\Tutorials\EventSourcing\EventSourcing\obj\Debug\EventSourcing.pdb
